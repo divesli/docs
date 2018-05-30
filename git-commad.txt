@@ -1,0 +1,149 @@
+============================日常 git 恢复commit提交=====================
+git撤销上次提交
+	git revert HEAD // 版本会前移
+	git reset -hard HEAD
+========================================================================
+
+============================日常 git 提交代码===========================
+1.git status  查看状态
+2.git diff  对吧更改
+3.git commit -a 提交代码 /: -a --amend 追加模式提交代码 
+4.git push origin HEAD:refs/for/master push到分支检视
+（git push origin corebase）
+========================================================================
+
+============================日常 git 历史记录===========================
+1.git blame file // 先查文件file中的某行代码由谁写的，在哪个commit中提交的：
+2.git show commitID //  查看提交记录
+
+========================================================================
+
+============================日常 git 恢复代码===========================
+1.git主干覆盖本地修改
+	git fetch --all //取回远程端所有修改
+	git reset --hard remotes/origin/master //将版本号置到FS2.1-DB这个版本上
+	git pull //更新
+
+2.git 恢复上次commit
+	git reset --mixed <hash id>
+
+3.可以查看已经commit 但是还没有push 的代码
+	git log FS2.1-DB ^origin/FS2.1-DB
+
+4.查看被删除的文件
+	git ls-files deleted
+5.恢复被删除的文件
+	git ls-files -d | xargs git checkout --
+6.撤销合并
+	git reset --hard(merge前的版本号)
+========================================================================
+
+============================日常 git clone代码==========================
+clone代码(只能clone master分支的代码)
+	git clone git@code.huawei.com:paas-ops/ats-core.git
+查看所有分支(包括远程分支)
+	git branch -a
+在本地创建一个和远程同名的本地分支,并切换到分支上
+	git checkout -t remotes/origin/FS2.1-DB
+跟新分支代码到本地
+	git pull
+========================================================================
+
+============================日常 git 分支间切换=========================
+git stash                 保存现场
+git stash list            查看缓存
+git stash pop stash@{1}   还原现场并删除
+==================================
+
+============================一份修改提交两个分支=======================
+git cherry-pick commit_id
+例如：在Mtt分支提交了一次记录，这次提交记录也需要提交到master。
+1.在Mtt分支查看提交日志，找到对应的提交commit_id
+2.从Mtt分支切到master分支
+3.执行 git cherry-pick commit_id
+4.git push
+======================================================================
+
+============================使用一个分支覆盖另一个分支================
+git checkout master // 切换到旧的分支 
+git reset –hard develop // 将本地的旧分支 master 重置成 develop 
+git push origin master –force // 再推送到远程仓库
+=====================================================================
+
+==============================删除分支===============================
+【git 删除本地分支】
+git branch -D br
+【git 删除远程分支】
+git push origin :br  (origin 后面有空格)
+========================================================================
+
+========================fork分支同步master分支代码======================
+(http://3ms.huawei.com/hi/group/2026711/thread_5207969.html?mapId=6213875)
+1.$ git remote -v
+    origin  git@code-sh.huawei.com:l00418076/paas-solution.git (fetch)
+    origin  git@code-sh.huawei.com:l00418076/paas-solution.git (push)
+2.$ git remote add paas-v2  git@code-sh.huawei.com:paas-v2/paas-solution.git
+3.$ git remote -v
+    origin  git@code-sh.huawei.com:l00418076/paas-solution.git (fetch)
+    origin  git@code-sh.huawei.com:l00418076/paas-solution.git (push)
+    paas-v2 git@code-sh.huawei.com:paas-v2/paas-solution.git (fetch)
+    paas-v2 git@code-sh.huawei.com:paas-v2/paas-solution.git (push)
+4.$ git fetch paas-v2
+5.$ git merge paas-v2/master
+6.$ git push origin master
+
+=======================================================================
+
+
+========================git tag========================================
+1.添加标签： git tag -a version -m "note"
+	注解：git tag 是打标签的命令，-a 是添加标签，其后要跟新标签号，-m 及后面的字符串是对该标签的注释。
+2.提交标签到远程仓库 ：git push origin -tags
+	注解：就像git push origin master 把本地修改提交到远程仓库一样，-tags可以把本地的打的标签全部提交到远程仓库。
+3.删除标签：git tag -d version
+	注解：-d 表示删除，后面跟要删除的tag名字
+4.删除远程标签：git push origin :refs/tags/version
+	注解：就像git push origin :branch_1 可以删除远程仓库的分支branch_1一样， 冒号前为空表示删除远程仓库的tag。
+5.查看标签：git tag或者git tag -l
+
+=======================================================================
+diff里面a表示前面那个变量，b表示第二个变量
+
+HEAD     commit版本
+Index     staged版本
+
+a、查看尚未暂存的文件更新了哪些部分，不加参数直接输入
+    git diff
+此命令比较的是工作目录(Working tree)和暂存区域快照(index)之间的差异
+也就是修改之后还没有暂存起来的变化内容。
+
+b、查看已经暂存起来的文件(staged)和上次提交时的快照之间(HEAD)的差异
+    git diff --cached
+    git diff --staged
+显示的是下一次commit时会提交到HEAD的内容(不带-a情况下)
+
+c、显示工作版本(Working tree)和HEAD的差别
+    git diff HEAD
+
+d、直接将两个分支上最新的提交做diff
+    git diff topic master 或 git diff topic..master
+
+e、输出自topic和master分别开发以来，master分支上的changed。
+    git diff topic...master
+Changes that occurred on the master branch since when the topic
+ branch was started off it
+f、查看简单的diff结果，可以加上--stat参数
+    git diff --stat
+
+g、查看当前目录和另外一个分支的差别
+    git diff test
+显示当前目录和另一个叫'test'分支的差别
+    git diff HEAD -- ./lib
+显示当前目录下的lib目录和上次提交之间的差别（更准确的说是在当前分支下）
+
+h、比较上次提交commit和上上次提交
+    git diff HEAD^ HEAD
+
+i、比较两个历史版本之间的差异
+    git diff SHA1 SHA2
+
