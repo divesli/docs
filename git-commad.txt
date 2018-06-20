@@ -7,8 +7,9 @@ git撤销上次提交
 ============================日常 git 提交代码===========================
 1.git status  查看状态
 2.git diff  对吧更改
-3.git commit -a 提交代码 /: -a --amend 追加模式提交代码 
-4.git push origin HEAD:refs/for/master push到分支检视
+3.git blame <filename> 查看文件中每一行的修改人及修改时间
+4.git commit -a 提交代码 /: -a --amend 追加模式提交代码 
+5.git push origin HEAD:refs/for/master push到分支检视
 （git push origin corebase）
 ========================================================================
 
