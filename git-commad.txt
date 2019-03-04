@@ -92,7 +92,7 @@ git push origin :br  (origin 后面有空格)
 4.$ git fetch paas-v2
 5.$ git merge paas-v2/master
 6.$ git push origin master
-
+7.$ git remote update && git rebase paas/master  # 同步远程master分支合并到fork出来的当前分支
 =======================================================================
 
 
