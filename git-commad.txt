@@ -95,6 +95,15 @@ git push origin :br  (origin 后面有空格)
 7.$ git remote update && git rebase paas/master  # 同步远程master分支合并到fork出来的当前分支
 =======================================================================
 
+============================git实现fetch和push不同源===========================
+1.直接从base库clone代码到本地
+    git clone {base库URL}
+2.修改push url
+    git remote set-url --push origin {fork库URL}
+3.git remote -v 查看结果
+
+至此，修改完成，更新会使用fetch url，从base库同步代码；提交，会使用push url向fork库提交。提交完成后，去fork库创建一个MR，申请同步代码
+========================================================================
 
 ========================git tag========================================
 1.添加标签： git tag -a version -m "note"
