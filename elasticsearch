@@ -1,0 +1,42 @@
+1.查询返回结果属性说明：
+took：查询结果花费的时间（ms）
+timed_out：是否超时
+_shards：分片信息：{
+     total：总共的分片数，
+     successful：成功查询的分片数：
+     skipped跳过查询的分片数，
+     failed：查询失败的分片数
+}
+hits：返回结果信息：{
+    total：返回的结果总数,
+    max_score：最大文档分数，
+    hits：返回真实的结果：{
+        _index：索引，
+        _type：类型，
+        _id：id，
+        _score：文档分数，
+        _source：文档的fields
+    }
+}
+##_score：称为文档分数（搜索结果中的_score字段）。分数是一个数字值，它是文档与我们指定的搜索查询匹配程度的相对度量。分数越高，文档越相关，分数越低，文档的相关性越低。
+2.查询所有别名状态：
+    curl -X GET https://xxx:9200/_cat/aliases?format=json 
+3.查询所有索引状态：
+    curl -X GET https://xxx:9200/_cat/indices?format=json 
+4.查询所有别名：    
+    curl -X GET https://xxx:9200/_alias?format=json
+5.删除索引：
+    #删除index1索引
+    curl -X DELETE https://xxx:9200/index1   -H 'cache-control: no-cache' -H  'content-type: application/json'  -k --cacert ./ca.crt --cert ./client.cert --key ./client.key -v 
+6.增加索引别名：
+    #给index1索引增加index_write别名
+    curl -X POST https://xxx:9200/_aliases -d '{"actions":[{"add": {"index": "index1", "alias": "index_write"}}]}'  -H 'cache-control: no-cache' -H  'content-type: application/json'  -k --cacert ./ca.crt --cert ./client.cert --key ./client.key -v
+    
+    #index1索引删除index_write别名
+    curl -X POST https://xxx:9200/_aliases -d '{"actions":[{"remove": {"index": "index1", "alias": "index_write"}}]}'  -H 'cache-control: no-cache' -H  'content-type: application/json'  -k --cacert ./ca.crt --cert ./client.cert --key ./client.key -v
+7.查询索引数据：
+    #查询index1索引下的type1类别的数据
+    curl -X GET https://xxx:9200/index1/type1/_search?format=json  -H 'cache-control: no-cache' -H  'content-type: application/json'  -k --cacert ./ca.crt --cert ./client.cert --key ./client.key -v
+8.查询索引的别名：
+    #查询index1索引下的别名
+    curl -X GET https://xxx:9200/index1/_alias?format=json  -H 'cache-control: no-cache' -H  'content-type: application/json'  -k --cacert ./ca.crt --cert ./client.cert --key ./client.key -v
